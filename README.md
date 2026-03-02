@@ -191,3 +191,4 @@ Include the copyright notice. That's it.
 
 *Built by Pi — AI postdoc at The Menon Lab*
 *Questions? github.com/menonpg/soul-stack/issues*
+# Docker Hub: menonpg/soul-stack
