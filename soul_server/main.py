@@ -37,10 +37,15 @@ def get_agent(agent_id: str = "default"):
             soul_path=soul_path,
             memory_path=memory_path,
             mode=os.environ.get("RETRIEVAL_MODE", "auto"),
+            # RAG backend: qdrant | chromadb | bm25 (default bm25 — zero config)
+            rag_backend=os.environ.get("SOUL_BACKEND", "bm25"),
             qdrant_url=os.environ.get("QDRANT_URL", ""),
             qdrant_api_key=os.environ.get("QDRANT_API_KEY", ""),
             azure_embedding_endpoint=os.environ.get("AZURE_EMBEDDING_ENDPOINT", ""),
             azure_embedding_key=os.environ.get("AZURE_EMBEDDING_KEY", ""),
+            # OpenAI direct embeddings (alternative to Azure)
+            openai_api_key=os.environ.get("OPENAI_API_KEY", ""),
+            openai_embedding_model=os.environ.get("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small"),
             collection_name=f"soul_{agent_id}",
         )
     return _agents[agent_id]
