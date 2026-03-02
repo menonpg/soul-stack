@@ -1,0 +1,68 @@
+version: "3.9"
+
+# soul-stack — full local AI stack with persistent memory
+# Usage: docker compose up
+# Then visit:
+#   soul.py API  → http://localhost:8000
+#   Jupyter Lab  → http://localhost:8888
+#   n8n          → http://localhost:5678
+#   Open WebUI   → http://localhost:3000
+
+services:
+
+  # ── soul-stack core (soul.py + Jupyter + n8n) ──────────────────────────────
+  soul:
+    image: menonpg/soul-stack:latest
+    # build: .   # uncomment to build locally
+    ports:
+      - "8000:8000"   # soul.py API
+      - "8888:8888"   # Jupyter Lab
+      - "5678:5678"   # n8n
+    volumes:
+      - soul_data:/data/soul      # SOUL.md + MEMORY.md (persistent)
+      - n8n_data:/data/n8n        # n8n workflows + credentials
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - QDRANT_URL=${QDRANT_URL:-}
+      - QDRANT_API_KEY=${QDRANT_API_KEY:-}
+      - AZURE_EMBEDDING_ENDPOINT=${AZURE_EMBEDDING_ENDPOINT:-}
+      - AZURE_EMBEDDING_KEY=${AZURE_EMBEDDING_KEY:-}
+      - RETRIEVAL_MODE=${RETRIEVAL_MODE:-auto}
+      - JUPYTER_TOKEN=${JUPYTER_TOKEN:-}
+      # Point n8n's HTTP requests at soul.py
+      - SOUL_API_URL=http://soul:8000
+    restart: unless-stopped
+
+  # ── Ollama (local LLMs — optional, comment out if using cloud APIs) ─────────
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama   # model files (can be large)
+    environment:
+      - OLLAMA_KEEP_ALIVE=24h
+    restart: unless-stopped
+    # Pull a model after first start:
+    # docker compose exec ollama ollama pull llama3.2
+
+  # ── Open WebUI (chat interface — connects to Ollama + soul.py) ─────────────
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    ports:
+      - "3000:8080"
+    volumes:
+      - webui_data:/app/backend/data
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY:-soul-stack-secret}
+    depends_on:
+      - ollama
+    restart: unless-stopped
+
+volumes:
+  soul_data:    # Persistent soul.py memory — most important, back this up
+  n8n_data:     # n8n workflows and credentials
+  ollama_data:  # Downloaded LLM models (large)
+  webui_data:   # Open WebUI settings
