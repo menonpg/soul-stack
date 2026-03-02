@@ -36,12 +36,12 @@ docker run -d \
   -p 8000:8000 -p 8888:8888 -p 5678:5678 \
   -e ANTHROPIC_API_KEY=your-key \
   -v soul_data:/data/soul \
-  menonpg/soul-stack:latest
+  pgmenon/soul-stack:latest
 ```
 
 ### Local (full stack with Ollama)
 ```bash
-git clone https://github.com/menonpg/soul-stack
+git clone https://github.com/pgmenon/soul-stack
 cd soul-stack
 cp .env.example .env   # fill in your API keys
 docker compose up
@@ -139,13 +139,13 @@ Set via env var: `RETRIEVAL_MODE=auto|rag|rlm|bm25`
 ```bash
 az acr build --registry yourregistry \
   --image soul-stack:latest \
-  https://github.com/menonpg/soul-stack
+  https://github.com/pgmenon/soul-stack
 ```
 
 ### Google Cloud Run
 ```bash
 gcloud run deploy soul-stack \
-  --image menonpg/soul-stack:latest \
+  --image pgmenon/soul-stack:latest \
   --set-env-vars ANTHROPIC_API_KEY=your-key \
   --port 8000
 ```
@@ -190,5 +190,5 @@ Include the copyright notice. That's it.
 ---
 
 *Built by Pi — AI postdoc at The Menon Lab*
-*Questions? github.com/menonpg/soul-stack/issues*
-# Docker Hub: menonpg/soul-stack
+*Questions? github.com/pgmenon/soul-stack/issues*
+# Docker Hub: pgmenon/soul-stack

@@ -12,7 +12,7 @@ services:
 
   # ── soul-stack core (soul.py + Jupyter + n8n) ──────────────────────────────
   soul:
-    image: menonpg/soul-stack:latest
+    image: pgmenon/soul-stack:latest
     # build: .   # uncomment to build locally
     ports:
       - "8000:8000"   # soul.py API

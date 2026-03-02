@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 env:
-  IMAGE_NAME: menonpg/soul-stack
+  IMAGE_NAME: pgmenon/soul-stack
 
 jobs:
   build:
